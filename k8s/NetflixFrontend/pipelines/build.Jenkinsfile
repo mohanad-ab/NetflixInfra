@@ -10,7 +10,20 @@ pipeline {
         timestamps()  // display timestamp in console output 
     }
     
-    environment { er setup') {
+    environment {
+        // GIT_COMMIT = sh(script: 'git rev-parse --short HEAD', returnStdout: true).trim()
+        // TIMESTAMP = new Date().format("yyyyMMdd-HHmmss")
+
+        IMAGE_TAG = "v1.0.$BUILD_NUMBER"
+        IMAGE_BASE_NAME = "netflix-app"
+
+        DOCKER_CREDS = credentials('dockerhub')
+        DOCKER_USERNAME = ${DOCKER_CREDS_USR}  // The _USR suffix added to access the username value
+        DOCKER_PASS = ${DOCKER_CREDS_PSW}      // The _PSW suffix added to access the password value
+    }
+
+    stages {
+        stage('Docker setup') {
             steps {
                 sh '''
                   docker login -u $DOCKER_USERNAME -p $DOCKER_PASS
@@ -30,16 +43,3 @@ pipeline {
         }
     }
 }
-        // GIT_COMMIT = sh(script: 'git rev-parse --short HEAD', returnStdout: true).trim()
-        // TIMESTAMP = new Date().format("yyyyMMdd-HHmmss")
-        
-        IMAGE_TAG = "v1.0.$BUILD_NUMBER"
-        IMAGE_BASE_NAME = "netflix-app"
-        
-        DOCKER_CREDS = credentials('dockerhub')
-        DOCKER_USERNAME = ${DOCKER_CREDS_USR}  // The _USR suffix added to access the username value 
-        DOCKER_PASS = ${DOCKER_CREDS_PSW}      // The _PSW suffix added to access the password value
-    } 
-
-    stages {
-        stage('Dock
